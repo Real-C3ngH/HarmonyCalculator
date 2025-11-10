@@ -20,7 +20,7 @@ struct Index {
   @State isSci: boolean = false
   @State waitingForOperand: boolean = false
 
-  private row1: string[] = ['AC', '%', 'C', '÷']
+  private row1: string[] = ['AC', '%', 'del', '÷']
   private row2: string[] = ['7', '8', '9', 'x']
   private row3: string[] = ['4', '5', '6', '-']
   private row4: string[] = ['1', '2', '3', '+']
@@ -125,7 +125,7 @@ struct Index {
       case 'AC':
         this.clearAll()
         break
-      case  'C':
+      case  'del':
         this.backspace()
         break
       case '+/-': {
