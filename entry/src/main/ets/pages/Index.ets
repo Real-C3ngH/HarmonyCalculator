@@ -20,11 +20,11 @@ struct Index {
   @State isSci: boolean = false
   @State waitingForOperand: boolean = false
 
-  private row1: string[] = ['AC', '+/-', '%', '÷']
+  private row1: string[] = ['AC', '%', 'C', '÷']
   private row2: string[] = ['7', '8', '9', 'x']
   private row3: string[] = ['4', '5', '6', '-']
   private row4: string[] = ['1', '2', '3', '+']
-  private row5: string[] = ['X', '0', '.', '=']
+  private row5: string[] = ['sci', '0', '.', '=']
 
   private sci1: string[] = ['1/x', '√x', 'y√x', 'x²', 'xʸ']
   private sci2: string[] = ['ln', 'log', 'sin', 'cos', 'tan']
@@ -37,6 +37,13 @@ struct Index {
   }
 
   private backspace() {
+    if (this.waitingForOperand) {
+      const exprSnapshot = this.upperLine !== '' ? this.upperLine : this.inputExpr
+      this.inputExpr = exprSnapshot
+      this.upperLine = ''
+      this.waitingForOperand = false
+    }
+
     if (this.inputExpr.length <= 1) { this.inputExpr = '0'; return }
 
     const funcs = ['sin', 'cos', 'tan', 'ln', 'log', 'sqrt', 'inv', 'yroot', '!']
@@ -118,6 +125,9 @@ struct Index {
       case 'AC':
         this.clearAll()
         break
+      case  'C':
+        this.backspace()
+        break
       case '+/-': {
         this.toggleSign()
         break
@@ -150,7 +160,7 @@ struct Index {
         }
         this.insertDot()
         break
-      case 'X':
+      case 'sci':
         this.isSci = !this.isSci
         break
       default:
@@ -762,8 +772,7 @@ struct Index {
           this.getButtonBg(k, keys),
           () => {
             if (k === 'AC') {
-              if (this.isInitialZero()) this.clearAll()
-              else this.backspace()
+              this.clearAll()
             } else {
               this.onBasicKey(k)
             }
